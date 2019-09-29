@@ -21,5 +21,54 @@ class GivenConjuredItemTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals("50", $items[0]->quality);
     }
-    
+
+    public function testSulfurasNeverHasToBeSold() {
+        $items      = [new Item("Sulfuras, Hand of Ragnaros", 1, 20)];
+        $gildedRose = new GildedRose($items);
+
+        $gildedRose->updateQuality();
+        $gildedRose->updateQuality();
+
+        $this->assertEquals("1", $items[0]->sell_in);
+    }
+
+    public function testSulfurasNeverHasToDecreasesQality() {
+        $items      = [new Item("Sulfuras, Hand of Ragnaros", 10, 20)];
+        $gildedRose = new GildedRose($items);
+
+        $gildedRose->updateQuality();
+
+        $this->assertGreaterThan(19, $items[0]->quality);
+    }
+
+    public function testBackstagePassesIncreaseQuality() {
+        $items      = [new Item("Backstage passes to a TAFKAL80ETC concert", 20, 30)];
+        $gildedRose = new GildedRose($items);
+
+        $gildedRose->updateQuality();
+
+        $this->assertEquals(31, $items[0]->quality);
+    }
+
+    public function testBackstagePassesIncreaseQualityRules() {
+        $items      = [new Item("Backstage passes to a TAFKAL80ETC concert", 11, 30)];
+        $gildedRose = new GildedRose($items);
+
+        for ($i=0; $i < 7; $i++) {
+          $gildedRose->updateQuality();
+
+        }
+
+        $this->assertEquals(44, $items[0]->quality);
+    }
+
+    public function testBackstagePassesQualityDropsToZeroAfterConcert() {
+        $items      = [new Item("Backstage passes to a TAFKAL80ETC concert", 1, 30)];
+        $gildedRose = new GildedRose($items);
+
+          $gildedRose->updateQuality();
+          $gildedRose->updateQuality();
+
+        $this->assertEquals(0, $items[0]->quality);
+    }
 }
