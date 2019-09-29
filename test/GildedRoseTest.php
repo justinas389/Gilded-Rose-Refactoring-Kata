@@ -3,11 +3,10 @@
 namespace App;
 
 class GildedRoseTest extends \PHPUnit\Framework\TestCase {
-    public function testFoo() {
-
-        $items      = [new Item("foo", 0, 0)];
+    public function testLoverQuality_GivenNormalItem() {
+        $items      = [new Item("Normal Item", 20, 10)];
         $gildedRose = new GildedRose($items);
         $gildedRose->updateQuality();
-        $this->assertEquals("foo", $items[0]->name);
+        $this->assertEquals("9", $items[0]->quality);
     }
 }
