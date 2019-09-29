@@ -62,13 +62,42 @@ class GivenConjuredItemTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(44, $items[0]->quality);
     }
 
-    public function testBackstagePassesQualityDropsToZeroAfterConcert() {
-        $items      = [new Item("Backstage passes to a TAFKAL80ETC concert", 1, 30)];
-        $gildedRose = new GildedRose($items);
+    public function testReduceQualityByTwo() {
+        $conjuredIitem      = [new Item("Conjured Mana Cake", 10, 20)];
+        $gildedRose = new GildedRose($conjuredIitem);
 
-          $gildedRose->updateQuality();
-          $gildedRose->updateQuality();
+        $gildedRose->updateQuality();
 
-        $this->assertEquals(0, $items[0]->quality);
+        $this->assertEquals(18, $conjuredIitem[0]->quality);
     }
+
+    public function testReduceQualityByFour_AfterSellInReachZero() {
+        $conjuredIitem      = [new Item("Conjured Mana Cake", 1, 20)];
+        $gildedRose = new GildedRose($conjuredIitem);
+
+        $gildedRose->updateQuality();
+        $gildedRose->updateQuality();
+        $gildedRose->updateQuality();
+
+        $this->assertEquals(10, $conjuredIitem[0]->quality);
+    }
+
+    public function testConjuredFlourQualityAtZero_GivenSellInRemains() {
+      $conjuredIitem      = [new Item("Conjured Mana Cake", 10, 1)];
+      $gildedRose = new GildedRose($conjuredIitem);
+
+      $gildedRose->updateQuality();
+
+      $this->assertEquals(0, $conjuredIitem[0]->quality);
+    }
+
+    public function testConjuredFlourQualityAtZero_GivenSellInZero() {
+      $conjuredIitem      = [new Item("Conjured Mana Cake", 0, 3)];
+      $gildedRose = new GildedRose($conjuredIitem);
+
+      $gildedRose->updateQuality();
+
+      $this->assertEquals(0, $conjuredIitem[0]->quality);
+    }
+
 }
